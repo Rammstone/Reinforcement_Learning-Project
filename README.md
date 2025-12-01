@@ -53,9 +53,19 @@ $$
 
 Where:
 
-- \( r_t(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \)  
-- \( \hat{A}_t \) = GAE advantage  
-- \( \epsilon \) = clipping range  
+$$
+r_t(\theta)
+= \frac{\pi_\theta(a_t \mid s_t)}
+       {\pi_{\text{old}}(a_t \mid s_t)}
+$$
+
+$$
+\hat{A}_t = \text{GAE advantage}
+$$
+
+$$
+\epsilon = \text{clipping range}
+$$
 
 This stabilizes training by preventing overly large destructive updates.
 
