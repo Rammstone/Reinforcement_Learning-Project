@@ -38,30 +38,52 @@ The observation space includes:
 Training uses **Stable Baselines3 PPO**, interacting with the custom environment.
 
 ### 🎯 PPO Objective
-```
-L_CLIP(θ) = E[min(r_t(θ) Â_t, clip(r_t(θ), 1−ε, 1+ε) Â_t)]
-```
-Where:
-- `r_t(θ)` = probability ratio  
-- `Â_t` = GAE advantage  
-- `ε` = clipping parameter  
 
-This stabilizes training by preventing overly large updates.
+The PPO clipped objective is:
+
+$$
+L_{\text{CLIP}}(\theta) 
+= \mathbb{E}_t\left[
+\min\left(
+r_t(\theta)\,\hat{A}_t,\;
+\text{clip}\!\left(r_t(\theta),\, 1-\epsilon,\, 1+\epsilon\right)\hat{A}_t
+\right)
+\right]
+$$
+
+Where:
+
+- \( r_t(\theta) = \frac{\pi_\theta(a_t \mid s_t)}{\pi_{\theta_{\text{old}}}(a_t \mid s_t)} \)  
+- \( \hat{A}_t \) = GAE advantage  
+- \( \epsilon \) = clipping range  
+
+This stabilizes training by preventing overly large destructive updates.
 
 ---
 
 ## 🎮 Reward Structure
-| Event | Reward |
-|-------|--------|
-| Collision | Large negative |
-| Step taken | Small negative |
-| Goal reached | Large positive |
 
-### GAE Advantage Calculation
-```
-δ_t = r_t + γV(s_(t+1)) – V(s_t)
-Â_t = Σ (γλ)^l δ_(t+l)
-```
+| Event         | Reward         |
+|---------------|----------------|
+| Collision     | Large negative |
+| Step taken    | Small negative |
+| Goal reached  | Large positive |
+
+
+### Generalized Advantage Estimation (GAE)
+
+The temporal-difference (TD) residual is:
+
+$$
+\delta_t = r_t + \gamma V(s_{t+1}) - V(s_t)
+$$
+
+The GAE advantage estimate is:
+
+$$
+\hat{A}_t
+= \sum_{l=0}^{\infty} (\gamma \lambda)^l\, \delta_{t+l}
+$$
 
 ---
 
@@ -98,18 +120,6 @@ The following outputs were generated during evaluation:
 - Final goal reach  
 
 (Place images or GIFs here if available)
-
----
-
-## 📦 Project Structure
-```
-📁 warehouse-rl-ppo
- ├── warehouse_env.py
- ├── train.py
- ├── evaluate.py
- ├── checkpoints/
- ├── README.md
-```
 
 ---
 
